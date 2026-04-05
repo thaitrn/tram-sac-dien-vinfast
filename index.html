@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trạm Sạc Xe Điện VinFast - Báo Cáo Nghiên Cứu</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-2: #334155;
+    --border: #475569;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #22d3ee;
+    --accent-2: #06b6d4;
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.1);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251, 191, 36, 0.1);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.1);
+    --blue: #60a5fa;
+    --blue-bg: rgba(96, 165, 250, 0.1);
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+    padding: 60px 24px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(52, 211, 153, 0.06) 0%, transparent 50%);
+    animation: pulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .hero-icon { font-size: 48px; margin-bottom: 16px; }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .hero p { color: var(--text-muted); font-size: 1.05rem; }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .hero-stat .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Navigation */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .tab {
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text); background: var(--surface-2); }
+  .tab.active {
+    color: var(--accent);
+    background: rgba(34, 211, 238, 0.1);
+    border-color: var(--accent);
+  }
+
+  /* Main content */
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+  .report { display: none; }
+  .report.active { display: block; }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .toc h3 {
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+  }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: block;
+  }
+  .toc a:hover { color: var(--accent); background: var(--surface-2); }
+
+  /* Sections */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .section h2 {
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section h3 {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin: 20px 0 12px;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .card-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .card-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .card-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 16px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  th {
+    background: var(--surface-2);
+    color: var(--accent);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+    color: var(--text);
+  }
+  tr:hover td { background: rgba(34, 211, 238, 0.04); }
+
+  /* Lists */
+  ul, ol { padding-left: 20px; margin: 8px 0; }
+  li { margin: 6px 0; color: var(--text); font-size: 0.95rem; }
+  li strong { color: var(--accent); }
+
+  /* Callouts */
+  .callout {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 4px solid;
+  }
+  .callout-green { background: var(--green-bg); border-color: var(--green); }
+  .callout-yellow { background: var(--yellow-bg); border-color: var(--yellow); }
+  .callout-red { background: var(--red-bg); border-color: var(--red); }
+  .callout-blue { background: var(--blue-bg); border-color: var(--blue); }
+  .callout-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+  }
+  .callout-green .callout-title { color: var(--green); }
+  .callout-yellow .callout-title { color: var(--yellow); }
+  .callout-red .callout-title { color: var(--red); }
+  .callout-blue .callout-title { color: var(--blue); }
+
+  /* Progress bars */
+  .progress-wrap { margin: 12px 0; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 1s ease;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; margin: 16px 0; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+  }
+  .timeline-year {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .timeline-content { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* Steps */
+  .steps { counter-reset: step; margin: 16px 0; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .step-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .tag-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+  .tag-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+  .tag-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+
+  /* Sources */
+  .sources {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .sources summary {
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .sources a {
+    display: block;
+    color: var(--blue);
+    font-size: 0.8rem;
+    padding: 3px 0;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .sources a:hover { text-decoration: underline; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 16px 32px; }
+    .hero-stats { gap: 20px; }
+    .section { padding: 20px; }
+    .tabs { gap: 4px; padding: 12px; }
+    .tab { padding: 8px 14px; font-size: 0.85rem; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-icon">&#9889;</div>
+    <h1>Tram Sac Xe Dien VinFast</h1>
+    <p>Bao cao nghien cuu thi truong & co hoi dau tu tram sac xe dien tai Viet Nam</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="value">$408M</div>
+        <div class="label">Quy mo 2033</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">22.3%</div>
+        <div class="label">CAGR</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">150K+</div>
+        <div class="label">Cong sac</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">3.5 nam</div>
+        <div class="label">ROI V-Green</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('market')">Thi truong</div>
+  <div class="tab" onclick="switchTab('invest')">Dau tu V-Green</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- REPORT 1: Market Overview -->
+  <div id="market" class="report active">
+
+    <!-- TOC -->
+    <div class="toc">
+      <h3>Muc luc</h3>
+      <div class="toc-grid">
+        <a href="#m1">1. Tong quan thi truong</a>
+        <a href="#m2">2. Co so ha tang sac</a>
+        <a href="#m3">3. Cong nghe & tieu chuan</a>
+        <a href="#m4">4. Mo hinh kinh doanh</a>
+        <a href="#m5">5. Thach thuc & co hoi</a>
+        <a href="#m6">6. Chien luoc VinFast</a>
+        <a href="#m7">7. Nhan thuc nguoi dung</a>
+        <a href="#m8">8. Ket luan</a>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section" id="m1">
+      <h2>1. Tong Quan Thi Truong</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-desc">Quy mo 2024</div>
+          <div class="card-value">$66.8M</div>
+          <div class="card-desc">USD</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Du bao 2033</div>
+          <div class="card-value">$408M</div>
+          <div class="card-desc">Tang truong 22.27%/nam</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Cong sac hien tai</div>
+          <div class="card-value">150,000+</div>
+          <div class="card-desc">Tren toan quoc</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Tang truong EV Q1/2024</div>
+          <div class="card-value">+400%</div>
+          <div class="card-desc">So voi nam truoc</div>
+        </div>
+      </div>
+
+      <h3>Muc tieu Chinh phu</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2025</div>
+          <div class="timeline-content">100% xe buyt do thi phai la xanh. Muc do tham nhap EV: 6.3%</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2030</div>
+          <div class="timeline-content">50% xe ban ra la xe dien (tai thanh pho). ~1 trieu xe dien tren duong. Tham nhap > 20%</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2040</div>
+          <div class="timeline-content">3.5 trieu xe dien tren duong</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="callout-title">Co hoi moi 2025</div>
+        <ul>
+          <li>Cam ket giam gia dien cho tram sac (PDP8 sua doi 2025)</li>
+          <li>Nang cap luoi dien quoc gia</li>
+          <li>Tich hop nang luong tai tao vao he thong sac</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section" id="m2">
+      <h2>2. Co So Ha Tang Sac</h2>
+
+      <h3>Cac loai tram sac</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Loai</th><th>Cong suat</th><th>Thoi gian sac</th><th>Ung dung</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-green">AC Level 1-2</span></td>
+              <td>3.7 - 22 kW</td>
+              <td>6-12 gio</td>
+              <td>Nha, van phong, trung tam mua sam</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-yellow">DC Nhanh</span></td>
+              <td>44+ kW</td>
+              <td>20-30 phut (80%)</td>
+              <td>Duong cao toc, tram dung</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-red">DC Sieu nhanh</span></td>
+              <td>150+ kW</td>
+              <td>15 phut</td>
+              <td>Sieu tram, lien tinh</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Nha cung cap chinh</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cong ty</th><th>So cong</th><th>Chien luoc</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>V-Green</strong></td><td>150,000+</td><td>Ultra-nhanh + quoc gia + quoc te</td></tr>
+            <tr><td><strong>EBOOST</strong></td><td>2,000+</td><td>AC phan tan, sieu thi & TTTM</td></tr>
+            <tr><td><strong>CHARGE+</strong></td><td>Mo rong</td><td>Hop tac Grab</td></tr>
+            <tr><td><strong>PV Power</strong></td><td>1,000 (2035)</td><td>Tram xang chuyen doi</td></tr>
+            <tr><td><strong>Petrolimex</strong></td><td>Hang tram</td><td>Sac tai cay xang</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Phan bo do thi</span><span>70%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Phan bo nong thon</span><span>30%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section" id="m3">
+      <h2>3. Cong Nghe & Tieu Chuan</h2>
+
+      <h3>Loai cam sac</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">CCS2</div>
+          <div class="card-desc">Tieu chuan Chau Au (IEC 62196). AC + DC qua mot cam. Cong suat 50-350 kW. Dang tro thanh tieu chuan toan cau.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">CHAdeMO</div>
+          <div class="card-desc">Phat trien boi Nhat Ban. Tuong thich Nissan, Mitsubishi. Cong suat toi da 400 kW.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">GB/T</div>
+          <div class="card-desc">Tieu chuan quoc gia Trung Quoc. Cam AC & DC rieng. Doi tac phat trien ChaoJi.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Type 2 (Mennekes)</div>
+          <div class="card-desc">Tieu chuan Chau Au cho AC. Pho bien tai Chau Au.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-yellow">
+        <div class="callout-title">Luu y quan trong</div>
+        <p>CCS, CHAdeMO, GB/T khong tuong thich voi nhau &rarr; can bo chuyen doi.</p>
+      </div>
+
+      <h3>Quy dinh ky thuat quoc gia (tu 15/06/2025)</h3>
+      <ul>
+        <li>Dien ap toi da: 1000V (AC), 1500V (DC)</li>
+        <li>Bao ve chong dien giat, qua dong, qua ap, qua nhiet, chay</li>
+        <li>Dieu tiet tu cam (EMC)</li>
+        <li>Ghi nhan ro: nha san xuat, mo hinh, dien ap, cong suat, giao thuc</li>
+      </ul>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section" id="m4">
+      <h2>4. Mo Hinh Kinh Doanh & Gia Ca</h2>
+
+      <h3>Cau truc gia</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Nha cung cap</th><th>Mo hinh gia</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>V-Green</strong></td><td>3,858 VND/kWh (tu thang 3/2024)</td></tr>
+            <tr><td><strong>EBOOST</strong></td><td>19,900 VND/phien + 8,900 VND/kW</td></tr>
+            <tr><td><strong>Trung binh nganh</strong></td><td>8,000 VND/kWh</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cac mo hinh kinh doanh</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">1. Khai thac truc tiep</div>
+          <div class="card-desc">V-Green dau tu, van hanh, bao tri. Mo hinh thang tu Vingroup.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Nhuong quyen (Franchise)</div>
+          <div class="card-desc">Nha dau tu mua thiet bi, V-Green quan ly + bao tri. Hang ngan don xin.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Chia se loi nhuan</div>
+          <div class="card-desc">EverEV: Nha dau tu mua thiet bi, chia doanh thu sac.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">4. Dia diem (Location-Based)</div>
+          <div class="card-desc">Cay xang, TTTM, bai do xe, khu dan cu.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section" id="m5">
+      <h2>5. Thach Thuc & Co Hoi</h2>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <h3 style="color:var(--red);">Thach thuc</h3>
+          <div class="callout callout-red">
+            <ul>
+              <li><strong>Luoi dien:</strong> Nguy co qua tai sau 2030</li>
+              <li><strong>Dia ly:</strong> 70% tap trung do thi, nong thon thieu</li>
+              <li><strong>Tieu chuan:</strong> CCS2, CHAdeMO, GB/T khong tuong thich</li>
+              <li><strong>Chi phi:</strong> Von dau tu ban dau lon</li>
+              <li><strong>Canh tranh:</strong> VinFast mien phi sac den 7/2025</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h3 style="color:var(--green);">Co hoi</h3>
+          <div class="callout callout-green">
+            <ul>
+              <li><strong>Tang truong:</strong> 22.27% CAGR den 2033</li>
+              <li><strong>Nhuong quyen:</strong> V-Green 1000+ don dang ky</li>
+              <li><strong>Tai tao:</strong> 100% nang luong sach</li>
+              <li><strong>B2B:</strong> Petrolimex, PV Oil, Grab</li>
+              <li><strong>Quoc te:</strong> Indonesia, Philippines 2030</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="section" id="m6">
+      <h2>6. Chien Luoc VinFast (V-Green)</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Nha sang lap</div>
+          <div class="card-value" style="font-size:1.1rem">Pham Nhat Vuong</div>
+          <div class="card-desc">Chu tich Vingroup, Founder VinFast</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Dau tu</div>
+          <div class="card-value">$400M</div>
+          <div class="card-desc">USD, thoi han 2 nam (2026-2027)</div>
+        </div>
+        <div class="card">
+          <div class="card-title">99 Sieu tram</div>
+          <div class="card-value">150 kW</div>
+          <div class="card-desc">Sac 80% trong 15 phut, 34 tinh</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Muc tieu 2028</div>
+          <div class="card-value">500K</div>
+          <div class="card-desc">Cong sac tren toan quoc</div>
+        </div>
+      </div>
+
+      <h3>Lo trinh mo rong</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2025 - Hien tai</div>
+          <div class="timeline-content">150,000+ cong sac, truc tiep quan ly mang sac VinFast</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2026</div>
+          <div class="timeline-content">99 sieu tram sac nhanh tren 34 tinh/thanh pho, moi tram toi da 100 cong</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2028</div>
+          <div class="timeline-content">500,000 cong sac tren toan quoc. Mo rong Indonesia, Philippines</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2030</div>
+          <div class="timeline-content">100,000 cong sac o 3 nuoc (VN, Indonesia, Philippines) voi eTreego</div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <div class="callout-title">Cong nghe</div>
+        <ul>
+          <li>100% nang luong tai tao (gio + mat troi)</li>
+          <li>Battery Energy Storage System (BESS) do VinFast san xuat</li>
+          <li>Mien phi sac den 7/2025 &rarr; loi the canh tranh</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="section" id="m7">
+      <h2>7. Nhan Thuc Nguoi Dung</h2>
+
+      <h3>Rao can chinh</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Range Anxiety</div>
+          <div class="card-desc">Thieu tram sac lien tinh, nguoi dung lo khong du dien di xa.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Thoi gian sac</div>
+          <div class="card-desc">AC 6-12h khong thich hop chuyen duong dai.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Chi phi</div>
+          <div class="card-desc">Chua ro so voi xang, gia dien bien dong.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Tuong thich</div>
+          <div class="card-desc">CCS2, CHAdeMO, GB/T khong tuong thich.</div>
+        </div>
+      </div>
+
+      <h3>Co hoi cai thien UX</h3>
+      <div class="callout callout-green">
+        <ul>
+          <li>Sac sieu nhanh 15 phut &rarr; giong thoi gian bom xang</li>
+          <li>Ung dung mobile tich hop (Grab + CHARGE+) &rarr; de tim & booking</li>
+          <li>Sac tai co so khac (TTTM, cafe) &rarr; giam thoi cho</li>
+          <li>He thong loyalty &rarr; khuyen khich tai su dung</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="section" id="m8">
+      <h2>8. Ket Luan</h2>
+
+      <div class="callout callout-blue">
+        <div class="callout-title">5 diem noi bat</div>
+        <ol>
+          <li><strong>Thi truong bung no:</strong> CAGR 22.27%, $67M &rarr; $408M</li>
+          <li><strong>Chinh phu ho tro:</strong> Giam gia dien, muc tieu 50% EV 2030</li>
+          <li><strong>V-Green dan dau:</strong> 150K cong + 99 sieu tram + 500K muc tieu 2028</li>
+          <li><strong>Mo hinh da dang:</strong> Direct, franchise, revenue-share, location-based</li>
+          <li><strong>Hop tac rong:</strong> Petrolimex, PV Oil, Grab, Savico</li>
+        </ol>
+      </div>
+
+      <div class="callout callout-yellow">
+        <div class="callout-title">Cau hoi chua giai quyet</div>
+        <ol>
+          <li>Tieu chuan cam sac cuoi cung cua Viet Nam?</li>
+          <li>Chi phi lap dat & bao tri tram DC nhanh?</li>
+          <li>Lich trien khai cu the nang cap luoi dien (PDP8)?</li>
+          <li>% chia loi nhuan V-Green cho nha dau tu?</li>
+          <li>Tien do 99 sieu tram Q2/Q3 2026?</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT 2: Investment -->
+  <div id="invest" class="report">
+
+    <!-- TOC -->
+    <div class="toc">
+      <h3>Muc luc</h3>
+      <div class="toc-grid">
+        <a href="#i1">1. Tong quan V-Green</a>
+        <a href="#i2">2. Hinh thuc hop tac</a>
+        <a href="#i3">3. Chi phi dau tu</a>
+        <a href="#i4">4. Doanh thu & loi nhuan</a>
+        <a href="#i5">5. Quy trinh dang ky</a>
+        <a href="#i6">6. Dieu kien tham gia</a>
+        <a href="#i7">7. Cam ket V-Green</a>
+        <a href="#i8">8. Rui ro</a>
+        <a href="#i9">9. So sanh doi thu</a>
+        <a href="#i10">10. Huong dan quyet dinh</a>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section" id="i1">
+      <h2>1. Tong Quan V-Green</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-desc">Tram da trien khai</div>
+          <div class="card-value">7,687</div>
+          <div class="card-desc">63/63 tinh thanh</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Phien sac</div>
+          <div class="card-value">18 trieu</div>
+          <div class="card-desc">Tong so</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Dien sac</div>
+          <div class="card-value">400M kWh</div>
+          <div class="card-desc">Tong so</div>
+        </div>
+        <div class="card">
+          <div class="card-desc">Muc tieu</div>
+          <div class="card-value">500K</div>
+          <div class="card-desc">Cong sac dai han</div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <div class="callout-title">Mo hinh "Tram sac toan dan"</div>
+        <p>V-Green chia se doanh thu co dinh voi cac doi tac nhuong quyen. V-Green quan ly cong nghe, bao tri, van hanh, marketing. Nha dau tu chi can dau tu co so ha tang & thiet bi.</p>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section" id="i2">
+      <h2>2. Cac Hinh Thuc Hop Tac</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Tram sac o to</div>
+          <div class="card-desc">AC 7.4-11 kW, DC 60-150 kW. Dien tich toi thieu 15-16 m&sup2;. Doi tac lon: Fast+ (5,000 tram).</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Tu doi pin xe may</div>
+          <div class="card-desc">Luu tru & doi pin xe may dien VinFast. Tu 210 trieu VND/tu. Mo hinh sharing economy.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cho thue mat bang</div>
+          <div class="card-desc">Sieu thi, quan coffee, bai gui xe, khach san, tram xang cho V-Green dat tram.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Gop von & chien luoc</div>
+          <div class="card-desc">Co che gop von phat trien mang luoi (doi voi nha dau tu to chuc).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section" id="i3">
+      <h2>3. Chi Phi Dau Tu Chi Tiet</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Loai tram</th><th>Chi phi</th><th>Cong suat</th><th>Dien tich</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-green">Tru AC 11 kW</span></td>
+              <td><strong>15 trieu VND</strong></td>
+              <td>11 kW</td>
+              <td>~2-3 m&sup2;</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-blue">Tram nho 2-4 tru AC</span></td>
+              <td><strong>100-200 trieu VND</strong></td>
+              <td>22-44 kW</td>
+              <td>~10-15 m&sup2;</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-yellow">Tram vua 4 tru DC</span></td>
+              <td><strong>879 trieu VND</strong></td>
+              <td>4 x 60 kW</td>
+              <td>25-35 m&sup2;</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-red">Tu doi pin xe may</span></td>
+              <td><strong>210 trieu VND</strong></td>
+              <td>-</td>
+              <td>~2 m&sup2;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="callout-title">Chi phi van hanh</div>
+        <ul>
+          <li><strong>Bao tri:</strong> MIEN PHI 100% - V-Green cam ket</li>
+          <li><strong>Quan ly:</strong> Khong co - V-Green cung cap he thong</li>
+          <li><strong>Dien:</strong> Theo gia dien ho gia dinh hoac kinh doanh</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section" id="i4">
+      <h2>4. Doanh Thu & Loi Nhuan Du Kien</h2>
+
+      <div class="callout callout-blue">
+        <div class="callout-title">Cong thuc chia se doanh thu</div>
+        <p style="font-size:1.2rem; font-weight:700; color:var(--accent);">Nha dau tu nhan: 750 VND &times; so kWh sac</p>
+        <p style="color:var(--text-muted); margin-top:4px;">Thoi gian: Toi thieu 10 nam, khong bien doi</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Loai tram</th><th>Doanh thu/thang</th><th>Loi nhuan/thang</th><th>ROI</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tru AC 11 kW</td>
+              <td>1-1.5 trieu</td>
+              <td>~1 trieu</td>
+              <td><span class="tag tag-green">15-20 thang</span></td>
+            </tr>
+            <tr>
+              <td>Tram 4 tru 60 kW</td>
+              <td>50+ trieu</td>
+              <td>~58 trieu</td>
+              <td><span class="tag tag-blue">3.5 nam</span></td>
+            </tr>
+            <tr>
+              <td>Tram chung cu/sieu thi</td>
+              <td>50+ trieu</td>
+              <td>40-45 trieu</td>
+              <td><span class="tag tag-blue">~3 nam</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-yellow">
+        <div class="callout-title">Luu y</div>
+        <p>Nhieu chu xe VinFast sac mien phi den 2027 &rarr; anh huong doanh thu ngan han, nhung tang doanh thu dai han (tuyen tich khach hang).</p>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section" id="i5">
+      <h2>5. Quy Trinh Dang Ky</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Chuan bi & tim hieu</div>
+            <div class="step-desc">Nghien cuu mo hinh, xac dinh vi tri mat bang, chuan bi giay to (CMND, quyen su dung dat, GPKD)</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Dang ky chinh thuc</div>
+            <div class="step-desc">Website: <strong>vgreen.net/vi</strong> | Hotline: <strong>1900 23 23 89 ext. 5</strong></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Khao sat mat bang (3-5 ngay)</div>
+            <div class="step-desc">Dai dien V-Green kiem tra he thong dien, vi tri, dien tich, quy hoach. Tu van giai phap phu hop.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Ky hop dong (1-2 ngay)</div>
+            <div class="step-desc">Hop dong nhuong quyen 10 nam. Xac dinh cong suat, gia chia se, cam ket, bao hanh.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Lap dat & van hanh (5-10 ngay)</div>
+            <div class="step-desc">V-Green cung cap thiet bi, ky su huong dan lap dat, khoi dong he thong.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Thu nhap</div>
+            <div class="step-desc">He thong thanh toan tu dong. Doanh thu tich luy, thanh toan dinh ky. Ho tro 24/7.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="callout-title">Tong thoi gian: 2-4 tuan</div>
+      </div>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="section" id="i6">
+      <h2>6. Dieu Kien & Yeu Cau</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Mat bang</div>
+          <ul style="margin-top:8px">
+            <li>Toi thieu: 15-16 m&sup2; (tru don)</li>
+            <li>Tram vua (4 tru): 25-35 m&sup2;</li>
+            <li>De tiep can, khong ngap ung</li>
+            <li>Gan nut giao thong, tuyen chinh</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Ha tang dien</div>
+          <ul style="margin-top:8px">
+            <li>Toi thieu 11 kW (AC) hoac 60+ kW (DC)</li>
+            <li>Co the keo dien tu luoi chinh</li>
+            <li>Upgrade do nha dau tu chiu</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Phap ly</div>
+          <ul style="margin-top:8px">
+            <li>Chung nhan quyen su dung dat</li>
+            <li>Hoac hop dong thue &ge; 3-5 nam</li>
+            <li>CMND/CCCD, hoa don tien dien</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Tai chinh</div>
+          <ul style="margin-top:8px">
+            <li>Von: 15M - 879M VND</li>
+            <li>Khong phi nhuong quyen hang nam</li>
+            <li>Chi chia doanh thu</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="section" id="i7">
+      <h2>7. Cam Ket & Bao Dam Tu V-Green</h2>
+
+      <div class="card-grid">
+        <div class="card" style="border-left: 3px solid var(--green);">
+          <div class="card-title">Thoi han: 10 nam</div>
+          <div class="card-desc">Co the gia han</div>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--accent);">
+          <div class="card-title">Doanh thu: 750 VND/kWh</div>
+          <div class="card-desc">Co dinh, khong bien doi</div>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--blue);">
+          <div class="card-title">Ho tro ky thuat</div>
+          <div class="card-desc">Bao tri mien phi, sua chua, thay the</div>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--yellow);">
+          <div class="card-title">Marketing</div>
+          <div class="card-desc">V-Green to chuc, quang ba, thu hut khach</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="callout-title">Boi thuong</div>
+        <p>Neu V-Green dung cam ket truoc han &rarr; boi thuong cho nha dau tu (chi tiet theo hop dong).</p>
+      </div>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="section" id="i8">
+      <h2>8. Rui Ro & Luu Y</h2>
+
+      <div class="card-grid">
+        <div class="card" style="border-top: 3px solid var(--red);">
+          <div class="card-title" style="color:var(--red)">Thi truong</div>
+          <div class="card-desc">Nhieu chu xe sac tai nha (40% VN). Mien phi sac VinFast den 2027. Canh tranh tu EBOOST, EVerest, Shell.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--yellow);">
+          <div class="card-title" style="color:var(--yellow)">Cong nghe</div>
+          <div class="card-desc">Chuan sac toan cau dang thay doi. Thiet bi co the loi thoi. Phu thuoc server V-Green.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--red);">
+          <div class="card-title" style="color:var(--red)">Dien & chi phi</div>
+          <div class="card-desc">EVN tang gia dien &rarr; giam margin. Tru DC 150 kW tieu thu cuc nhieu. Nang cap ha tang 500M-2B VND.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--yellow);">
+          <div class="card-title" style="color:var(--yellow)">Vi tri</div>
+          <div class="card-desc">Khu vuc dong tru &rarr; canh tranh cao. V-Green cap phep 2-3 tram canh nhau. Quy hoach thay doi.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-red">
+        <div class="callout-title">Rui ro phu thuoc VinFast</div>
+        <p>Neu VinFast suy giam &rarr; nhu cau sac giam &rarr; V-Green khong con ho tro. Tuong lai phu thuoc vao thanh cong chien luoc xe dien VinFast.</p>
+      </div>
+    </div>
+
+    <!-- Section 9 -->
+    <div class="section" id="i9">
+      <h2>9. So Sanh Doi Thu</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tieu chi</th><th>V-Green</th><th>EBOOST</th><th>Doc lap</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Quy mo</strong></td><td>7,687 tram</td><td>300 tram</td><td>Ca nhan</td></tr>
+            <tr><td><strong>Von buoc vao</strong></td><td>100M - 879M</td><td>Chua ro</td><td>500M - 1.5B</td></tr>
+            <tr><td><strong>ROI</strong></td><td><span class="tag tag-green">3.5 nam</span></td><td>Chua ro</td><td><span class="tag tag-yellow">5-7 nam</span></td></tr>
+            <tr><td><strong>Rui ro</strong></td><td><span class="tag tag-green">Thap-Trung</span></td><td><span class="tag tag-yellow">Trung</span></td><td><span class="tag tag-red">Cao</span></td></tr>
+            <tr><td><strong>Ho tro</strong></td><td>Day du</td><td>It</td><td>Khong co</td></tr>
+            <tr><td><strong>Linh hoat</strong></td><td>Thap (10 nam)</td><td>Cao</td><td>Cao</td></tr>
+            <tr><td><strong>Mang luoi</strong></td><td>63/63 tinh</td><td>TP lon</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 10 -->
+    <div class="section" id="i10">
+      <h2>10. Huong Dan Quyet Dinh</h2>
+
+      <div class="callout callout-green">
+        <div class="callout-title">NEN DAU TU NEU</div>
+        <ul>
+          <li>Co mat bang san (15-16 m&sup2;+)</li>
+          <li>Nam o nut giao thong, TTTM, khu cong nghiep</li>
+          <li>Von 100M - 1B VND</li>
+          <li>Muon ROI nhanh (3.5 nam)</li>
+          <li>Tin vao thanh cong VinFast & xe dien VN</li>
+        </ul>
+      </div>
+
+      <div class="callout callout-yellow">
+        <div class="callout-title">CAN NHAC NEU</div>
+        <ul>
+          <li>Vi tri mat bang chua ro rang</li>
+          <li>Ha tang dien yeu (upgrade chi phi cao)</li>
+          <li>Mat bang < 3 nam (cam ket V-Green 10 nam)</li>
+          <li>Gia dien tang > 15%/nam</li>
+        </ul>
+      </div>
+
+      <div class="callout callout-red">
+        <div class="callout-title">NEN TRANH NEU</div>
+        <ul>
+          <li>Khong co mat bang, chi muon kiem loi</li>
+          <li>Khu vuc nong thon heo lanh</li>
+          <li>Khu vuc da co 3+ tram sac khac</li>
+          <li>Hop dong thue < 5 nam</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top:24px;">Buoc hanh dong dau tien</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Truy cap vgreen.net/vi</div>
+            <div class="step-desc">Xem cac tram hien tai, phan tich vi tri cua ban</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Goi hotline 1900 23 23 89 ext. 5</div>
+            <div class="step-desc">Cung cap thong tin mat bang, nhan tu van</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Hoi 10 cau hoi quan trong</div>
+            <div class="step-desc">Doanh thu du kien, chi phi lap dat, bao hanh, khoang cach tram, dieu khoan dieu chinh gia dien, thoi gian thanh toan, cam ket boi thuong, chinh sach mat bang, he thong disaster recovery</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-blue" style="margin-top:20px;">
+        <div class="callout-title">Tieu chi quyet dinh duy nhat</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Doanh thu du kien</th><th>Quyet dinh</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>> 30M/thang</strong></td><td><span class="tag tag-green">Dau tu rat hop ly</span></td></tr>
+              <tr><td><strong>15-30M/thang</strong></td><td><span class="tag tag-yellow">Hop ly, xem lai vi tri/quy mo</span></td></tr>
+              <tr><td><strong>< 15M/thang</strong></td><td><span class="tag tag-red">Can nhac, ROI > 5 nam</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  Bao cao nghien cuu - 05/04/2026 | Du lieu tu IMARC, KPMG, VinFast, V-Green, Rest of World, TechSci Research
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.report').forEach(r => r.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
