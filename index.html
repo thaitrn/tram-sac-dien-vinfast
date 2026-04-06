@@ -637,8 +637,10 @@
 
   @media (max-width: 480px) {
     .hero { padding: 40px 12px 32px; }
-    .hero-stat { padding: 12px 14px; min-width: 100px; }
-    .hero-stat .value { font-size: 1.2rem; }
+    .hero-stats { gap: 6px; }
+    .hero-stat { padding: 10px 12px; min-width: 0; flex: 1 1 calc(50% - 6px); }
+    .hero-stat .value { font-size: 1.15rem; }
+    .hero-stat .label { font-size: 0.65rem; letter-spacing: 1px; }
     .section { padding: 18px 14px; border-radius: 12px; }
     .card { padding: 16px; }
     .callout { padding: 14px 16px; }
