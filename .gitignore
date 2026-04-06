@@ -94,3 +94,10 @@ worktrees/
 
 # Generated OpenCode backup from scripts/generate-opencode.py --force
 .opencode.backup/
+.opencode/
+
+# Tool config files
+.repomixignore
+AGENTS.md
+CLAUDE.md
+release-manifest.json
